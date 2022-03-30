@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import si.banka.korisnicki_servis.controller.response_forms.ChangePasswordForm;
 import si.banka.korisnicki_servis.controller.response_forms.CreateUserForm;
+import si.banka.korisnicki_servis.controller.response_forms.ResetPasswordForm;
 import si.banka.korisnicki_servis.model.User;
 import si.banka.korisnicki_servis.service.UserService;
 
@@ -58,6 +60,21 @@ public class UserController {
         return ResponseEntity.ok().body(username + " edited");
     }
 
+    @PostMapping("/user/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordForm resetPasswordForm){
+        if(!userService.resetPassword(resetPasswordForm.getEmail())){
+            return ResponseEntity.badRequest().body("Mail failed to send");
+        }
+        return ResponseEntity.ok().body("Mail send to: " + resetPasswordForm.getEmail());
+    }
+
+    @PostMapping("/user/change-password/{token}")
+    public ResponseEntity<?> changePassword(@PathVariable String token, @RequestBody ChangePasswordForm changePasswordForm){
+        if(!userService.setNewPassword(changePasswordForm.getNewPassword(), token)){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+        return ResponseEntity.ok().body("New password!");
+    }
 
 }
 

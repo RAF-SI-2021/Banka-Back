@@ -14,7 +14,9 @@ public interface UserService {
     void createUserAdmin(User user);
     User editUser(User user, String token);
     void deleteUser(User user);
-
+    User getUserByEmail(String email);
+    boolean resetPassword(String email);
+    boolean setNewPassword(String password, String token);
     List<User> getUsers();
     Role getRole(String role_name);
     Role saveRole(Role role);
