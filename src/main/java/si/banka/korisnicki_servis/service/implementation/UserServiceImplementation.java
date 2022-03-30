@@ -225,6 +225,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
         User user = prt.getUser();
         user.setPassword(password);
+        this.userRepository.save(user);
         return true;
     }
 }
