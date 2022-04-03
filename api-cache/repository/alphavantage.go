@@ -117,27 +117,23 @@ func (r *AlphaVantageRepository) handlePeriodicRequest(req model.AlphaVantageReq
 
 	log.Printf("Collecting %s data for %q", req.Type, req.Symbol)
 
-	for _, slice := range req.Slices {
-		log.Printf("Collecting intraday data for %q, interval of %q and slice %q", req.Symbol, req.Interval, slice)
-
-		data, timeout, err := internalPeriodic(req.Type, r.apiKey, req.Symbol)
+	data, timeout, err := internalPeriodic(req.Type, r.apiKey, req.Symbol)
+	if err != nil {
+		return err
+	}
+	if timeout {
+		log.Println("Timeout, waiting 1 minute...")
+		time.Sleep(1 * time.Minute)
+		data, timeout, err = internalPeriodic(req.Type, r.apiKey, req.Symbol)
 		if err != nil {
 			return err
 		}
 		if timeout {
-			log.Println("Timeout, waiting 1 minute...")
-			time.Sleep(1 * time.Minute)
-			data, timeout, err = internalPeriodic(req.Type, r.apiKey, req.Symbol)
-			if err != nil {
-				return err
-			}
-			if timeout {
-				return fmt.Errorf("timeout")
-			}
+			return fmt.Errorf("timeout")
 		}
-
-		completeData = append(completeData, data...)
 	}
+
+	completeData = append(completeData, data...)
 
 	if err := r.tsdbClient.PushPeriodicData(req.Type, req.Symbol, completeData); err != nil {
 		return err
