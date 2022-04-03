@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  influx:
+    image: influxdb:2.1.1
+    env_file: ./.env
+    ports:
+      - 8086:8086
+    volumes:
+      - influx-data:/var/lib/influxdb2
+      - influx-config:/etc/influxdb2
+    restart: on-failure:10
+  apicache:
+    build: .
+    env_file: ./.env
+    command:
+      - api-cache
+      - --influx-url=http://influx:8086
+      - --influx-bucket=$DOCKER_INFLUXDB_INIT_BUCKET
+      - --influx-org=$DOCKER_INFLUXDB_INIT_ORG
+      - --influx-token=$DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+      - --av-token=$AV_TOKEN
+    ports:
+      - 8000:8000
+    links:
+      - "influx:influx"
+    depends_on:
+      - influx
+volumes:
+  influx-data:
+  influx-config:
