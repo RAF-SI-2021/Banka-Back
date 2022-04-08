@@ -37,7 +37,7 @@ func (r *AlphaVantageStockRepository) HandleStockRequests() {
 
 		req := queue.QueueImpl.GetStock()
 
-		if req.Type == model.IntradayAlphaVantageRequestType {
+		if req.Type == model.IntradayAlphaVantageStockRequestType {
 			if err := r.handleIntradayStockRequest(req); err != nil {
 				log.Println(err)
 			}
@@ -117,14 +117,14 @@ func (r *AlphaVantageStockRepository) handlePeriodicStockRequest(req model.Alpha
 
 	log.Printf("Collecting %s data for %q", req.Type, req.Symbol)
 
-	data, timeout, err := internalPeriodic(req.Type, r.apiKey, req.Symbol)
+	data, timeout, err := internalPeriodicStock(req.Type, r.apiKey, req.Symbol)
 	if err != nil {
 		return err
 	}
 	if timeout {
 		log.Println("Timeout, waiting 1 minute...")
 		time.Sleep(1 * time.Minute)
-		data, timeout, err = internalPeriodic(req.Type, r.apiKey, req.Symbol)
+		data, timeout, err = internalPeriodicStock(req.Type, r.apiKey, req.Symbol)
 		if err != nil {
 			return err
 		}
@@ -142,9 +142,9 @@ func (r *AlphaVantageStockRepository) handlePeriodicStockRequest(req model.Alpha
 	return nil
 }
 
-func internalPeriodic(reqType model.AlphaVantageStockRequestType, apiKey, ticker string) ([]model.PeriodicStocks, bool, error) {
+func internalPeriodicStock(reqType model.AlphaVantageStockRequestType, apiKey, ticker string) ([]model.PeriodicStocks, bool, error) {
 	url := ""
-	if reqType == model.DailyAlphaVantageRequestType {
+	if reqType == model.DailyAlphaVantageStockRequestType {
 		url = fmt.Sprintf("https://www.alphavantage.co/query?function=%s&symbol=%s&outputsize=full&datatype=csv&apikey=%s", alphaVantageStockFunction(reqType), ticker, apiKey)
 	} else {
 		url = fmt.Sprintf("https://www.alphavantage.co/query?function=%s&symbol=%s&datatype=csv&apikey=%s", alphaVantageStockFunction(reqType), ticker, apiKey)
@@ -180,13 +180,13 @@ func internalPeriodic(reqType model.AlphaVantageStockRequestType, apiKey, ticker
 
 func alphaVantageStockFunction(t model.AlphaVantageStockRequestType) string {
 	switch t {
-	case model.IntradayAlphaVantageRequestType:
+	case model.IntradayAlphaVantageStockRequestType:
 		return "TIME_SERIES_INTRADAY_EXTENDED"
-	case model.DailyAlphaVantageRequestType:
+	case model.DailyAlphaVantageStockRequestType:
 		return "TIME_SERIES_DAILY"
-	case model.WeeklyAlphaVantageRequestType:
+	case model.WeeklyAlphaVantageStockRequestType:
 		return "TIME_SERIES_WEEKLY"
-	case model.MonthlyAlphaVantageRequestType:
+	case model.MonthlyAlphaVantageStockRequestType:
 		return "TIME_SERIES_MONTHLY"
 	default:
 		return ""

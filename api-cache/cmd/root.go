@@ -47,10 +47,11 @@ func root() *cobra.Command {
 			tsdbStockClient := tsdb.NewStockInfluxDBClient(opts.influxUrl, opts.influxToken, opts.influxOrg, opts.influxBucket)
 			stockRepo := repository.NewAlphaVantageStockRepository(opts.alphavantageToken, tsdbStockClient)
 
-			// tsdbForexClient := tsdb.NewForexInfluxDBClient(opts.influxUrl, opts.influxToken, opts.influxOrg, opts.influxBucket)
-			// forexRepo := repository.NewAlphaVantageForexRepository(opts.alphavantageToken, tsdbStockClient)
+			tsdbForexClient := tsdb.NewForexInfluxDBClient(opts.influxUrl, opts.influxToken, opts.influxOrg, opts.influxBucket)
+			forexRepo := repository.NewAlphaVantageForexRepository(opts.alphavantageToken, tsdbForexClient)
 
 			go stockRepo.HandleStockRequests()
+			go forexRepo.HandleForexRequests()
 
 			// Start server
 			server.StartServer(opts.listenAddress)

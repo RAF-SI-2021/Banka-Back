@@ -8,6 +8,6 @@ type TSDBStockClient interface {
 }
 
 type TSDBForexClient interface {
-	PushIntradayForexkData(string, []model.IntradayForex) error
-	PushPeriodicForexkData(model.AlphaVantageForexRequestType, string, []model.PeriodicForex) error
+	PushIntradayForexData(string, string, []model.IntradayForex) error
+	PushPeriodicForexData(model.AlphaVantageForexRequestType, string, string, []model.PeriodicForex) error
 }

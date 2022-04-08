@@ -11,17 +11,19 @@ type AlphaVantageStockRequest struct {
 type AlphaVantageStockRequestType string
 
 const (
-	IntradayAlphaVantageRequestType AlphaVantageStockRequestType = "intraday"
-	DailyAlphaVantageRequestType    AlphaVantageStockRequestType = "daily"
-	WeeklyAlphaVantageRequestType   AlphaVantageStockRequestType = "weekly"
-	MonthlyAlphaVantageRequestType  AlphaVantageStockRequestType = "monthly"
+	IntradayAlphaVantageStockRequestType AlphaVantageStockRequestType = "intraday"
+	DailyAlphaVantageStockRequestType    AlphaVantageStockRequestType = "daily"
+	WeeklyAlphaVantageStockRequestType   AlphaVantageStockRequestType = "weekly"
+	MonthlyAlphaVantageStockRequestType  AlphaVantageStockRequestType = "monthly"
 )
 
 type AlphaVantageForexRequestType string
 
 const (
 	IntradayAlphaVantageForexRequestType AlphaVantageForexRequestType = "intraday"
-	ExchangeAlphaVantageForexRequestType AlphaVantageForexRequestType = "exhange"
+	DailyAlphaVantageForexRequestType    AlphaVantageForexRequestType = "daily"
+	WeeklyAlphaVantageForexRequestType   AlphaVantageForexRequestType = "weekly"
+	MonthlyAlphaVantageForexRequestType  AlphaVantageForexRequestType = "monthly"
 )
 
 type AlphaVantageForexRequest struct {
@@ -29,6 +31,4 @@ type AlphaVantageForexRequest struct {
 	FromSymbol string                       `json:"from"`
 	ToSymbol   string                       `json:"to"`
 	Interval   string                       `json:"interval"`
-	Months     int                          `json:"months"`
-	Slices     []string                     `json:"-"`
 }

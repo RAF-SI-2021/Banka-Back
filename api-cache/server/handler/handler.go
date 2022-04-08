@@ -32,7 +32,7 @@ func AlphaVantageStockData(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Symbol is required"))
 	}
 
-	if req.Type == model.IntradayAlphaVantageRequestType {
+	if req.Type == model.IntradayAlphaVantageStockRequestType {
 		switch req.Interval {
 		case "1min":
 		case "5min":
@@ -107,26 +107,6 @@ func AlphaVantageForexData(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("Unsupported interval"))
 		}
-
-		if req.Months < 1 && req.Months > 24 {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Unsupported number of months"))
-		}
-
-		yr := 1
-		month := 1
-		months := req.Months
-		slices := []string{}
-		for months > 0 {
-			slices = append(slices, fmt.Sprintf("year%dmonth%d", yr, month))
-			month = month + 1
-			if month == 13 {
-				month = month - 12
-				yr = yr + 1
-			}
-			months = months - 1
-		}
-		req.Slices = slices
 	}
 
 	queue.QueueImpl.AddForex(req)
