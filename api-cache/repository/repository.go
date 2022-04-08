@@ -1,5 +1,9 @@
 package repository
 
 type StocksRepository interface {
-	HandleRequests()
+	HandleStockRequests()
+}
+
+type ForexRepository interface {
+	HandleForexRequests()
 }

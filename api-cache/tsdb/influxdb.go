@@ -12,26 +12,26 @@ import (
 	"xmudrii.com/api-cache/model"
 )
 
-type InfluxDBClient struct {
+type StockInfluxDBClient struct {
 	client influxdb2.Client
 
 	org    string
 	bucket string
 }
 
-func NewInfluxDBClient(url, token, org, bucket string) TSDBClient {
+func NewStockInfluxDBClient(url, token, org, bucket string) TSDBStockClient {
 	log.Println(url)
 	client := influxdb2.NewClient(url, token)
 	client.Options().WriteOptions().SetUseGZip(true)
 
-	return &InfluxDBClient{
+	return &StockInfluxDBClient{
 		client: client,
 		org:    org,
 		bucket: bucket,
 	}
 }
 
-func (c InfluxDBClient) PushIntradayData(ticker string, data []model.IntradayStocks) error {
+func (c StockInfluxDBClient) PushIntradayStockData(ticker string, data []model.IntradayStocks) error {
 	writeAPI := c.client.WriteAPIBlocking(c.org, c.bucket)
 
 	points := []*write.Point{}
@@ -64,7 +64,7 @@ func (c InfluxDBClient) PushIntradayData(ticker string, data []model.IntradaySto
 	return nil
 }
 
-func (c InfluxDBClient) PushPeriodicData(reqType model.AlphaVantageRequestType, ticker string, data []model.PeriodicStocks) error {
+func (c StockInfluxDBClient) PushPeriodicStockData(reqType model.AlphaVantageStockRequestType, ticker string, data []model.PeriodicStocks) error {
 	writeAPI := c.client.WriteAPIBlocking(c.org, c.bucket)
 
 	points := []*write.Point{}

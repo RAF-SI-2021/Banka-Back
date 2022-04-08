@@ -16,33 +16,33 @@ import (
 	"xmudrii.com/api-cache/tsdb"
 )
 
-type AlphaVantageRepository struct {
+type AlphaVantageStockRepository struct {
 	apiKey     string
-	tsdbClient tsdb.TSDBClient
+	tsdbClient tsdb.TSDBStockClient
 }
 
-func NewAlphaVantageRepository(apiKey string, tsdbClient tsdb.TSDBClient) StocksRepository {
-	return &AlphaVantageRepository{
+func NewAlphaVantageStockRepository(apiKey string, tsdbClient tsdb.TSDBStockClient) StocksRepository {
+	return &AlphaVantageStockRepository{
 		apiKey:     apiKey,
 		tsdbClient: tsdbClient,
 	}
 }
 
-func (r *AlphaVantageRepository) HandleRequests() {
+func (r *AlphaVantageStockRepository) HandleStockRequests() {
 	for {
-		if queue.QueueImpl.IsEmpty() {
+		if queue.QueueImpl.IsEmptyStock() {
 			time.Sleep(3 * time.Second)
 			continue
 		}
 
-		req := queue.QueueImpl.Get()
+		req := queue.QueueImpl.GetStock()
 
 		if req.Type == model.IntradayAlphaVantageRequestType {
-			if err := r.handleIntradayRequest(req); err != nil {
+			if err := r.handleIntradayStockRequest(req); err != nil {
 				log.Println(err)
 			}
 		} else {
-			if err := r.handlePeriodicRequest(req); err != nil {
+			if err := r.handlePeriodicStockRequest(req); err != nil {
 				log.Println(err)
 			}
 		}
@@ -50,20 +50,20 @@ func (r *AlphaVantageRepository) HandleRequests() {
 	}
 }
 
-func (r *AlphaVantageRepository) handleIntradayRequest(req model.AlphaVantageRequest) error {
+func (r *AlphaVantageStockRepository) handleIntradayStockRequest(req model.AlphaVantageStockRequest) error {
 	completeData := []model.IntradayStocks{}
 
 	for _, slice := range req.Slices {
 		log.Printf("Collecting intraday data for %q, interval of %q and slice %q", req.Symbol, req.Interval, slice)
 
-		data, timeout, err := internalIntraday(r.apiKey, req.Symbol, req.Interval, slice)
+		data, timeout, err := internalStockIntraday(r.apiKey, req.Symbol, req.Interval, slice)
 		if err != nil {
 			return err
 		}
 		if timeout {
 			log.Println("Timeout, waiting 1 minute...")
 			time.Sleep(1 * time.Minute)
-			data, timeout, err = internalIntraday(r.apiKey, req.Symbol, req.Interval, slice)
+			data, timeout, err = internalStockIntraday(r.apiKey, req.Symbol, req.Interval, slice)
 			if err != nil {
 				return err
 			}
@@ -75,14 +75,14 @@ func (r *AlphaVantageRepository) handleIntradayRequest(req model.AlphaVantageReq
 		completeData = append(completeData, data...)
 	}
 
-	if err := r.tsdbClient.PushIntradayData(req.Symbol, completeData); err != nil {
+	if err := r.tsdbClient.PushIntradayStockData(req.Symbol, completeData); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func internalIntraday(apiKey, ticker, interval, slice string) ([]model.IntradayStocks, bool, error) {
+func internalStockIntraday(apiKey, ticker, interval, slice string) ([]model.IntradayStocks, bool, error) {
 	url := fmt.Sprintf("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=%s&interval=%s&slice=%s&adjusted=false&apikey=%s", ticker, interval, slice, apiKey)
 	log.Println(url)
 	rawResp, err := http.Get(url)
@@ -112,7 +112,7 @@ func internalIntraday(apiKey, ticker, interval, slice string) ([]model.IntradayS
 	return data, false, nil
 }
 
-func (r *AlphaVantageRepository) handlePeriodicRequest(req model.AlphaVantageRequest) error {
+func (r *AlphaVantageStockRepository) handlePeriodicStockRequest(req model.AlphaVantageStockRequest) error {
 	completeData := []model.PeriodicStocks{}
 
 	log.Printf("Collecting %s data for %q", req.Type, req.Symbol)
@@ -135,19 +135,19 @@ func (r *AlphaVantageRepository) handlePeriodicRequest(req model.AlphaVantageReq
 
 	completeData = append(completeData, data...)
 
-	if err := r.tsdbClient.PushPeriodicData(req.Type, req.Symbol, completeData); err != nil {
+	if err := r.tsdbClient.PushPeriodicStockData(req.Type, req.Symbol, completeData); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func internalPeriodic(reqType model.AlphaVantageRequestType, apiKey, ticker string) ([]model.PeriodicStocks, bool, error) {
+func internalPeriodic(reqType model.AlphaVantageStockRequestType, apiKey, ticker string) ([]model.PeriodicStocks, bool, error) {
 	url := ""
 	if reqType == model.DailyAlphaVantageRequestType {
-		url = fmt.Sprintf("https://www.alphavantage.co/query?function=%s&symbol=%s&outputsize=full&datatype=csv&apikey=%s", alphaVantageFunction(reqType), ticker, apiKey)
+		url = fmt.Sprintf("https://www.alphavantage.co/query?function=%s&symbol=%s&outputsize=full&datatype=csv&apikey=%s", alphaVantageStockFunction(reqType), ticker, apiKey)
 	} else {
-		url = fmt.Sprintf("https://www.alphavantage.co/query?function=%s&symbol=%s&datatype=csv&apikey=%s", alphaVantageFunction(reqType), ticker, apiKey)
+		url = fmt.Sprintf("https://www.alphavantage.co/query?function=%s&symbol=%s&datatype=csv&apikey=%s", alphaVantageStockFunction(reqType), ticker, apiKey)
 	}
 
 	log.Println(url)
@@ -178,7 +178,7 @@ func internalPeriodic(reqType model.AlphaVantageRequestType, apiKey, ticker stri
 	return data, false, nil
 }
 
-func alphaVantageFunction(t model.AlphaVantageRequestType) string {
+func alphaVantageStockFunction(t model.AlphaVantageStockRequestType) string {
 	switch t {
 	case model.IntradayAlphaVantageRequestType:
 		return "TIME_SERIES_INTRADAY_EXTENDED"

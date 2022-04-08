@@ -7,36 +7,59 @@ import (
 )
 
 type Queue struct {
-	Array []model.AlphaVantageRequest
-	lock  *sync.Mutex
+	StockArray []model.AlphaVantageStockRequest
+	ForexArray []model.AlphaVantageForexRequest
+	lock       *sync.Mutex
 }
 
 var QueueImpl *Queue
 
 func NewQueue() {
 	QueueImpl = &Queue{
-		Array: make([]model.AlphaVantageRequest, 0),
-		lock:  &sync.Mutex{},
+		StockArray: make([]model.AlphaVantageStockRequest, 0),
+		ForexArray: make([]model.AlphaVantageForexRequest, 0),
+		lock:       &sync.Mutex{},
 	}
 }
 
-func (q *Queue) IsEmpty() bool {
+func (q *Queue) IsEmptyStock() bool {
 	q.lock.Lock()
-	val := len(q.Array) == 0
+	val := len(q.StockArray) == 0
 	q.lock.Unlock()
 	return val
 }
 
-func (q *Queue) Add(request model.AlphaVantageRequest) {
+func (q *Queue) AddStock(request model.AlphaVantageStockRequest) {
 	q.lock.Lock()
-	q.Array = append(q.Array, request)
+	q.StockArray = append(q.StockArray, request)
 	q.lock.Unlock()
 }
 
-func (q *Queue) Get() model.AlphaVantageRequest {
+func (q *Queue) GetStock() model.AlphaVantageStockRequest {
 	q.lock.Lock()
-	req := q.Array[0]
-	q.Array = q.Array[1:]
+	req := q.StockArray[0]
+	q.StockArray = q.StockArray[1:]
+	q.lock.Unlock()
+	return req
+}
+
+func (q *Queue) IsEmptyForex() bool {
+	q.lock.Lock()
+	val := len(q.ForexArray) == 0
+	q.lock.Unlock()
+	return val
+}
+
+func (q *Queue) AddForex(request model.AlphaVantageForexRequest) {
+	q.lock.Lock()
+	q.ForexArray = append(q.ForexArray, request)
+	q.lock.Unlock()
+}
+
+func (q *Queue) GetForex() model.AlphaVantageForexRequest {
+	q.lock.Lock()
+	req := q.ForexArray[0]
+	q.ForexArray = q.ForexArray[1:]
 	q.lock.Unlock()
 	return req
 }

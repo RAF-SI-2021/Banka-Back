@@ -1,18 +1,34 @@
 package model
 
-type AlphaVantageRequest struct {
-	Type     AlphaVantageRequestType `json:"type"`
-	Symbol   string                  `json:"symbol"`
-	Interval string                  `json:"interval"`
-	Months   int                     `json:"months"`
-	Slices   []string                `json:"-"`
+type AlphaVantageStockRequest struct {
+	Type     AlphaVantageStockRequestType `json:"type"`
+	Symbol   string                       `json:"symbol"`
+	Interval string                       `json:"interval"`
+	Months   int                          `json:"months"`
+	Slices   []string                     `json:"-"`
 }
 
-type AlphaVantageRequestType string
+type AlphaVantageStockRequestType string
 
 const (
-	IntradayAlphaVantageRequestType AlphaVantageRequestType = "intraday"
-	DailyAlphaVantageRequestType    AlphaVantageRequestType = "daily"
-	WeeklyAlphaVantageRequestType   AlphaVantageRequestType = "weekly"
-	MonthlyAlphaVantageRequestType  AlphaVantageRequestType = "monthly"
+	IntradayAlphaVantageRequestType AlphaVantageStockRequestType = "intraday"
+	DailyAlphaVantageRequestType    AlphaVantageStockRequestType = "daily"
+	WeeklyAlphaVantageRequestType   AlphaVantageStockRequestType = "weekly"
+	MonthlyAlphaVantageRequestType  AlphaVantageStockRequestType = "monthly"
 )
+
+type AlphaVantageForexRequestType string
+
+const (
+	IntradayAlphaVantageForexRequestType AlphaVantageForexRequestType = "intraday"
+	ExchangeAlphaVantageForexRequestType AlphaVantageForexRequestType = "exhange"
+)
+
+type AlphaVantageForexRequest struct {
+	Type       AlphaVantageForexRequestType `json:"type"`
+	FromSymbol string                       `json:"from"`
+	ToSymbol   string                       `json:"to"`
+	Interval   string                       `json:"interval"`
+	Months     int                          `json:"months"`
+	Slices     []string                     `json:"-"`
+}

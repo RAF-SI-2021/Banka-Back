@@ -12,8 +12,8 @@ import (
 func StartServer(listenAddress string) {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/alphavantage", handler.AlphaVantageData).Methods(http.MethodPost)
-
+	router.HandleFunc("/alphavantagestock", handler.AlphaVantageStockData).Methods(http.MethodPost)
+	router.HandleFunc("/alphavantageforex", handler.AlphaVantageForexData).Methods(http.MethodPost)
 	log.Println("API is running!")
 	http.ListenAndServe(listenAddress, router)
 }
