@@ -53,4 +53,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_ZUUL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=rs.edu.raf.banka:zuul -Dsonar.projectName="Banka_Zuul"
-      
+      - name: "[InfluxScrapper] SonarCloud Scan"
+        uses: SonarSource/sonarcloud-github-action@master
+        working-directory: ./InfluxScrapper
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_INFLUX_SCRAPPER }}
