@@ -124,6 +124,25 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
+    public User getUserByToken(String token) {
+        try {
+            DecodedJWT decodedToken = decodeToken(token);
+            String username = decodedToken.getSubject();
+            Optional<User> user = userRepository.findByUsername(username);
+
+            if (user == null || !user.isPresent() || !(user.get().isAktivan())) {
+                log.error("User {} not found in database", username);
+                throw new UsernameNotFoundException("User not found in database");
+            }
+
+            return user.get();
+        } catch (JWTVerificationException e) {
+            // TODO find a better exception for this case
+            throw new UsernameNotFoundException("Token is invalid");
+        }
+    }
+
+    @Override
     public void createUserAdmin(User user){
         log.info("Saving admin to the database");
         String hash_pw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
