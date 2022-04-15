@@ -16,10 +16,10 @@ import java.util.Collection;
 
 @SpringBootApplication()
 @EnableDiscoveryClient
-public class BankaApplication {
+public class UserApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BankaApplication.class, args);
+		SpringApplication.run(UserApplication.class, args);
 	}
 
 	@Bean
@@ -31,19 +31,19 @@ public class BankaApplication {
 	CommandLineRunner run(UserService userService){
 		return args -> {
 			//Punimo Role permisijama
-			Collection<String> admin_permissions = new ArrayList<>();
-			admin_permissions.add(String.valueOf(Permissions.CREATE_USER));
-			admin_permissions.add(String.valueOf(Permissions.DELETE_USER));
-			admin_permissions.add(String.valueOf(Permissions.LIST_USERS));
-			admin_permissions.add(String.valueOf(Permissions.EDIT_USER));
-			admin_permissions.add(String.valueOf(Permissions.MY_EDIT));
+			Collection<String> adminPermissions = new ArrayList<>();
+			adminPermissions.add(String.valueOf(Permissions.CREATE_USER));
+			adminPermissions.add(String.valueOf(Permissions.DELETE_USER));
+			adminPermissions.add(String.valueOf(Permissions.LIST_USERS));
+			adminPermissions.add(String.valueOf(Permissions.EDIT_USER));
+			adminPermissions.add(String.valueOf(Permissions.MY_EDIT));
 
-			Collection<String> neka_pozicija_permissions = new ArrayList<>();
-			neka_pozicija_permissions.add(String.valueOf(Permissions.MANAGE_STUFF));
+			Collection<String> nekaPozicijaPermissions = new ArrayList<>();
+			nekaPozicijaPermissions.add(String.valueOf(Permissions.MANAGE_STUFF));
 
 			//Punimo bazu Rolama
-			userService.saveRole(new Role(null, "ROLE_GL_ADMIN", admin_permissions));
-			userService.saveRole(new Role(null, "ROLE_ADMIN", admin_permissions));
+			userService.saveRole(new Role(null, "ROLE_GL_ADMIN", adminPermissions));
+			userService.saveRole(new Role(null, "ROLE_ADMIN", adminPermissions));
 
 			//Cuvamo glavnog admina
 			userService.createUserAdmin(new User("admin", "Admin123"));

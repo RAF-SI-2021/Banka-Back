@@ -53,13 +53,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         User user = (User)authentication.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
-        String access_token = JWT.create()
+        String accessToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("permissions", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), access_token);
+        new ObjectMapper().writeValue(response.getOutputStream(), accessToken);
     }
 }

@@ -20,15 +20,15 @@ public class BerzaController {
 
     @PostMapping(value = "/order", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> makeOrder(@RequestBody OrderRequest orderRequest){
-        berzaService.makeOrder(orderRequest.getBerza_id() , orderRequest.getUser_id(), orderRequest.getHartija_od_vrednosti_id(),
-                orderRequest.getHartija_od_vrednosti_tip(), orderRequest.getKolicina(), orderRequest.getAkcija(),
+        berzaService.makeOrder(orderRequest.getBerzaId() , orderRequest.getUserId(), orderRequest.getHartijaOdVrednostiId(),
+                orderRequest.getHartijaOdVrednostiTip(), orderRequest.getKolicina(), orderRequest.getAkcija(),
                 orderRequest.getLimitValue(), orderRequest.getStopValue(), orderRequest.isAllOrNoneFlag(), orderRequest.isMarginFlag());
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/order-status/{id_berza}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getOrderStatus(@PathVariable Long id_berza){
-        return ResponseEntity.ok(berzaService.getOrderStatus(id_berza));
+    @GetMapping(value = "/order-status/{idBerza}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getOrderStatus(@PathVariable Long idBerza){
+        return ResponseEntity.ok(berzaService.getOrderStatus(idBerza));
     }
 
 }

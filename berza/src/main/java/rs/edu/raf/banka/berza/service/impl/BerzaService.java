@@ -252,15 +252,15 @@ public class BerzaService {
         Date date = new Date();
 
         //format 9:30 a.m. to 4:00 p.m.
-        String pre_market = berza.getPre_market_radno_vreme();
-        pre_market = pre_market.replace("a.m.", "AM");
-        pre_market = pre_market.replace("p.m.", "PM");
-        String post_market = berza.getPost_market_radno_vreme();
-        post_market = post_market.replace("a.m.", "AM");
-        post_market = post_market.replace("p.m.", "PM");
+        String preMarket = berza.getPreMarketRadnoVreme();
+        preMarket = preMarket.replace("a.m.", "AM");
+        preMarket = preMarket.replace("p.m.", "PM");
+        String postMarket = berza.getPostMarketRadnoVreme();
+        postMarket = postMarket.replace("a.m.", "AM");
+        postMarket = postMarket.replace("p.m.", "PM");
 
-        String preSplit[] = pre_market.split("to");
-        String postSplit[] = post_market.split("to");
+        String preSplit[] = preMarket.split("to");
+        String postSplit[] = postMarket.split("to");
 
         DateFormat dateFormat = new SimpleDateFormat("h:mm a");
         try {

@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/user/create")
-    @ApiOperation("Create user with username, ime, prezime, email, jmbg, br_telefona, password, aktivan, pozicija")
+    @ApiOperation("Create user with username, ime, prezime, email, jmbg, brTelefona, password, aktivan, pozicija")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = User.class)})
     public ResponseEntity<User>createUser(@RequestBody CreateUserForm createUserForm) {
         return ResponseEntity.ok().body(userService.createUser(createUserForm));
@@ -109,7 +109,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         if(!OTPUtilities.isValidSeecret(secret))
             return ResponseEntity.badRequest().build();
-        user.setOtpSeecret(secret);
+        user.setOtpSecret(secret);
         return ResponseEntity.ok().build();
     }
 
@@ -122,7 +122,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         if(user.isRequiresOtp())
             return ResponseEntity.badRequest().build();
-        user.setOtpSeecret(null);
+        user.setOtpSecret(null);
         return ResponseEntity.ok().build();
     }
 

@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class AkcijeDto {
 
-    private Long id_hartije_od_vrednosti;
-    private String oznaka_hartije;
+    private Long idHartijeOdVrednosti;
+    private String oznakaHartije;
     private Double cena;
-    private Double promena_iznos;
+    private Double promenaIznos;
     private Long volume;
 }

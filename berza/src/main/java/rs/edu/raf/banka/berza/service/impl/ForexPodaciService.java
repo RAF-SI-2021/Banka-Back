@@ -172,11 +172,11 @@ public class ForexPodaciService {
 //    public Page<Forex> search(String oznakaHartije, String opisHartije, Integer page, Integer size){
 //        Forex forex = new Forex();
 //        forex.setOznakaHartije(oznakaHartije);
-//        forex.setOpis_hartije(opisHartije);
+//        forex.setOpisHartije(opisHartije);
 //
 //        ExampleMatcher exampleMatcher = ExampleMatcher.matching()
-//                .withMatcher("oznaka_hartije", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//                .withMatcher("opis_hartije", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+//                .withMatcher("oznakaHartije", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+//                .withMatcher("opisHartije", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 //        Example<Forex> example = Example.of(forex, exampleMatcher);
 //
 //        return forexRepository.findAll(example, PageRequest.of(page, size));

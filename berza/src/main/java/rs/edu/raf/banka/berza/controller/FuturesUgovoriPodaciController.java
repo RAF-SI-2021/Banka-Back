@@ -71,7 +71,7 @@ public class FuturesUgovoriPodaciController {
 //                                                              Integer size){
 //        return ResponseEntity.
 //                ok(futuresUgovoriPodaciService.
-//                        search(searchHartijaOdVrednostiRequest.getOznaka_hartije(), searchHartijaOdVrednostiRequest.getOpis_hartije(),
+//                        search(searchHartijaOdVrednostiRequest.getOznakaHartije(), searchHartijaOdVrednostiRequest.getOpisHartije(),
 //                page, size));
 //    }
 //

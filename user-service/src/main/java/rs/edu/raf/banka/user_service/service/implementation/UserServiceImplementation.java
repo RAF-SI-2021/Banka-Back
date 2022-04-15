@@ -83,8 +83,8 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
-    public Role getRole(String role_name) {
-        return roleRepository.findByName(role_name);
+    public Role getRole(String roleName) {
+        return roleRepository.findByName(roleName);
     }
 
     @Override
@@ -106,19 +106,19 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         //TODO: Popraviti formu za otp
         User user = new User(username, createUserForm.getIme(),
                             createUserForm.getPrezime(), createUserForm.getEmail(),
-                            createUserForm.getJmbg(), createUserForm.getBr_telefon(),
+                            createUserForm.getJmbg(), createUserForm.getBrTelefona(),
                             password, null, true, false, this.getRole(createUserForm.getPozicija()));
         log.info("Saving new user {} to the database", user.getUsername());
-        String hash_pw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hash_pw);
+        String hashPw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hashPw);
         return userRepository.save(user);
     }
 
     @Override
     public void createUserAdmin(User user){
         log.info("Saving admin to the database");
-        String hash_pw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hash_pw);
+        String hashPw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hashPw);
         user.setAktivan(true);
         userRepository.save(user);
     }
@@ -158,7 +158,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         user.setUsername(user.getIme() + "." + user.getPrezime());
         user.setEmail(newUser.getEmail());
         user.setJmbg(newUser.getJmbg());
-        user.setBr_telefon(newUser.getBr_telefon());
+        user.setBrTelefona(newUser.getBrTelefona());
         user.setRole(getRole(newUser.getPozicija()));
         userRepository.save(user);
     }
@@ -170,10 +170,10 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
-    public void setRoleToUser(String username, String role_name) {
-        log.info("Adding role {} to user {} to the database", role_name, username);
+    public void setRoleToUser(String username, String roleName) {
+        log.info("Adding role {} to user {} to the database", roleName, username);
         User user = userRepository.findByUsername(username);
-        Role role = roleRepository.findByName(role_name);
+        Role role = roleRepository.findByName(roleName);
         user.setRole(role);
     }
 

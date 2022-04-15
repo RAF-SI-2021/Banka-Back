@@ -79,7 +79,7 @@ public class ForexPodaciController {
 //
 //    @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<?> searchForex(@RequestBody SearchHartijaOdVrednostiRequest searchHartijaOdVrednostiRequest, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "30") Integer size){
-//        return ResponseEntity.ok(forexPodaciService.search(searchHartijaOdVrednostiRequest.getOznaka_hartije(), searchHartijaOdVrednostiRequest.getOpis_hartije(),
+//        return ResponseEntity.ok(forexPodaciService.search(searchHartijaOdVrednostiRequest.getOznakaHartije(), searchHartijaOdVrednostiRequest.getOpisHartije(),
 //                page, size));
 //    }
 //
