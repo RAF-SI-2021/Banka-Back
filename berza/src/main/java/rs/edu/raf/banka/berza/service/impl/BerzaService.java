@@ -82,12 +82,6 @@ public class BerzaService {
         }
 
         Double ukupnaCena = getPrice(ask, bid, orderAkcija);
-      
-//        if(ukupnaCena * kolicina > userAccount.getWallet())
-//            return new MakeOrderResponse("You don't have enough money for this action.");
-
-//        if(ukupnaCena * kolicina > userAccount.getWallet())
-//            return new MakeOrderResponse("You don't have enough money for this action.");
 
         Double provizija = getCommission(ukupnaCena, orderType);
 
