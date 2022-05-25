@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import rs.edu.raf.banka.user_service.controller.response_forms.*;
-import rs.edu.raf.banka.user_service.model.Agent;
 import rs.edu.raf.banka.user_service.model.User;
 import rs.edu.raf.banka.user_service.security.OTPUtilities;
 import rs.edu.raf.banka.user_service.service.UserService;
@@ -28,32 +26,6 @@ public class UserController {
 
     @Autowired
     private final UserService userService;
-
-    @PostMapping("/agent/create")
-    @ApiOperation("Creates new agent")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Agent.class)})
-    public ResponseEntity<?> createNewAgent(@RequestBody CreateAgentForm createAgentForm){
-        return ResponseEntity.ok().body(userService.createAgent(createAgentForm));
-    }
-
-
-    @PatchMapping("/limit-change/{id}")
-    @ApiOperation("Changes agent's limit")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Agent.class)})
-    public ResponseEntity<?> changeLimit(@PathVariable long id, @RequestBody ChangeLimitForm changeLimitForm){
-        Agent agent = userService.getAgentById(id);
-        userService.changeLimit(agent, changeLimitForm.getLimit());
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/limit-reset/{id}")
-    @ApiOperation("Resets agent's limitUsed")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Agent.class)})
-    public ResponseEntity<?> resetLimit(@PathVariable long id){
-        Agent agent = userService.getAgentById(id);
-        userService.resetLimitUsed(agent);
-        return ResponseEntity.ok().build();
-    }
 
     @GetMapping("/users")
     @ApiOperation("Gets all users")

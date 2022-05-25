@@ -15,14 +15,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import rs.edu.raf.banka.user_service.controller.response_forms.CreateAgentForm;
 import rs.edu.raf.banka.user_service.controller.response_forms.CreateUserForm;
 import rs.edu.raf.banka.user_service.mail.PasswordResetToken;
-import rs.edu.raf.banka.user_service.model.Agent;
 import rs.edu.raf.banka.user_service.model.Permissions;
 import rs.edu.raf.banka.user_service.model.Role;
 import rs.edu.raf.banka.user_service.model.User;
-import rs.edu.raf.banka.user_service.repository.AgentRepository;
 import rs.edu.raf.banka.user_service.repository.PasswordTokenRepository;
 import rs.edu.raf.banka.user_service.repository.RoleRepository;
 import rs.edu.raf.banka.user_service.repository.UserRepository;
@@ -48,23 +45,15 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Autowired
     private final PasswordTokenRepository passwordTokenRepository;
     @Autowired
-    private final AgentRepository agentRepository;
-    @Autowired
     JmsTemplate jmsTemplate;
     @Autowired
     Queue mailQueue;
 
     @Autowired
-    public UserServiceImplementation(
-            UserRepository userRepository,
-            RoleRepository roleRepository,
-            PasswordTokenRepository passwordTokenRepository,
-            AgentRepository agentRepository
-    ){
+    public UserServiceImplementation(UserRepository userRepository, RoleRepository roleRepository, PasswordTokenRepository passwordTokenRepository){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordTokenRepository = passwordTokenRepository;
-        this.agentRepository = agentRepository;
     }
 
     @Override
@@ -116,31 +105,6 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         log.info("Setting user inactive {} in database", user.getUsername());
         user.setAktivan(false);
         return true;
-    }
-
-    @Override
-    public Agent createAgent(CreateAgentForm createAgentForm) {
-        //TODO check username
-        String password = createAgentForm.getIme() + "Test123";
-        String hashPW = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        Agent agent = new Agent(
-                createAgentForm.getUsername(),
-                createAgentForm.getIme(),
-                createAgentForm.getPrezime(),
-                createAgentForm.getEmail(),
-                createAgentForm.getJmbg(),
-                createAgentForm.getBrTelefon(),
-                hashPW,
-                null,
-                true,
-                false,
-                this.getRole("ROLE_AGENT"),
-                createAgentForm.getLimit(),
-                createAgentForm.isNeedsSupervisorPermission()
-        );
-
-        return agentRepository.save(agent);
     }
 
     @Override
@@ -306,31 +270,6 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         user.setPassword(hashPW);
         userRepository.save(user);
         return true;
-    }
-
-    @Override
-    public Agent getAgentById(Long id) {
-        return agentRepository.getById(id);
-    }
-
-    @Override
-    public void resetLimitUsed(Agent agent) {
-        agent.setLimitUsed(0.0);
-        agentRepository.save(agent);
-    }
-
-    @Override
-    public void resetLimitUsedAllAgents() {
-        List<Agent> agents = agentRepository.findAll();
-        for(Agent a: agents){
-            a.setLimitUsed(0.0);
-        }
-        agentRepository.saveAll(agents);
-    }
-
-    @Override
-    public void changeLimit(Agent agent, Double limit) {
-        agent.setLimit(0.0);
     }
 
     public void sendMail(String email, String token) throws MessagingException {

@@ -1,8 +1,6 @@
 package rs.edu.raf.banka.user_service.service;
 
-import rs.edu.raf.banka.user_service.controller.response_forms.CreateAgentForm;
 import rs.edu.raf.banka.user_service.controller.response_forms.CreateUserForm;
-import rs.edu.raf.banka.user_service.model.Agent;
 import rs.edu.raf.banka.user_service.model.Role;
 import rs.edu.raf.banka.user_service.model.User;
 
@@ -11,7 +9,6 @@ import java.util.Optional;
 
 public interface UserService {
     User getUser(String username);
-    Agent createAgent(CreateAgentForm createAgentForm);
     Optional<User> getUserById(long id);
     User createUser(CreateUserForm createUserForm);
     User getUserByToken(String token);
@@ -29,8 +26,4 @@ public interface UserService {
     void setRoleToUser(String username, String role_name);
     void editOtpSeecret(User user, String optSeecret);
     boolean changePassword(String newPassword, User user);
-    Agent getAgentById(Long id);
-    void resetLimitUsed(Agent agent);
-    void resetLimitUsedAllAgents();
-    void changeLimit(Agent agent, Double limit);
 }
