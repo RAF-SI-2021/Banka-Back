@@ -80,6 +80,11 @@ public class AkcijePodaciService {
             akcija.setOpisHartije(co.getName());
             akcija.setLastUpdated(new Date());
             akcija.setOutstandingShares(co.getSharesOutstanding());
+            akcija.setCena(0.0);
+            akcija.setAsk(0.0);
+            akcija.setBid(0.0);
+            akcija.setVolume(0L);
+            akcija.setPromenaIznos(0.0);
 
             akcijeRepository.save(akcija);
         }
