@@ -51,17 +51,23 @@ public class OrderService {
 
     public List<Order> getOrders(String token, String status, Boolean done) {
         UserDto user = userService.getUserByToken(token);
-        UserRole role = UserRole.valueOf(user.getRoleName());
+        UserRole role = UserRole.valueOf(userService.getUserRoleByToken(token));
 
         if(role.equals(UserRole.ROLE_AGENT)) {
-            if(status.length() == 0 && done == null)
+            if(status == null && done == null)
                 return orderRepository.findOrdersByUserId(user.getId());
-            return orderRepository.findOrderByOrderStatusAndUserId(OrderStatus.valueOf(status.toUpperCase()), user.getId());
+            else if(status != null && done != null)
+                return orderRepository.findOrderByOrderStatusAndUserIdAndDone(OrderStatus.valueOf(status.toUpperCase()), user.getId(), done);
+            else
+                return null;
         }
 
-        if(status.length() == 0 && done == null)
+        if(status == null && done == null)
             return orderRepository.findAll();
-        return orderRepository.findOrderByOrderStatus(OrderStatus.valueOf(status.toUpperCase()));
+        else if(status != null && done != null)
+            return orderRepository.findOrderByOrderStatusAndDone(OrderStatus.valueOf(status.toUpperCase()), done);
+        else
+            return null;
     }
 
     public ApproveRejectOrderResponse approveOrder(String userRole, Long id){

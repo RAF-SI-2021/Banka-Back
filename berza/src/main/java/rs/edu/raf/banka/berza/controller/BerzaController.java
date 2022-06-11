@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.edu.raf.banka.berza.dto.OrderDto;
 import rs.edu.raf.banka.berza.model.Order;
 import rs.edu.raf.banka.berza.requests.OrderRequest;
 import rs.edu.raf.banka.berza.response.ApproveRejectOrderResponse;
@@ -53,12 +52,16 @@ public class BerzaController {
         return ResponseEntity.ok(berzaService.findAkcije(oznaka));
     }
 
+    @GetMapping(value = "/order", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllOrders(@RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(orderService.getOrders(token, null, null));
+    }
+
     @GetMapping(value = "/order/{status}/{done}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getOrders(@RequestHeader("Authorization") String token,
-                                       @PathVariable(required = false) String status,
-                                       @PathVariable(required = false) Boolean done){
-        List<Order> orders = orderService.getOrders(token, status, done);
-        return ResponseEntity.ok(orders.stream().map(this::convertToDto).collect(Collectors.toList()));
+                                       @PathVariable String status,
+                                       @PathVariable Boolean done){
+        return ResponseEntity.ok(orderService.getOrders(token, status, done));
     }
 
     @PostMapping(value = "/order", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -99,12 +102,6 @@ public class BerzaController {
         }
         return ResponseEntity.ok(resp);
     }
-
-    private OrderDto convertToDto(Order order) {
-        return modelMapper.map(order, OrderDto.class);
-    }
-
-
 
     @GetMapping(value = "/hartijeWithSettlementDate", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAkcijeTimeseries(){
