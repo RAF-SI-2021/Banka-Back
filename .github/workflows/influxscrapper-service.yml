@@ -58,6 +58,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_INFLUX_SCRAPPER }}
           ALPHAVANTAGE_TOKEN: ${{ secrets.ALPHAVANTAGE_TOKEN }}
           NASDAQ_API_KEY: ${{ secrets.NASDAQ_API_KEY }}
+          INFLUX_DB_URL: http://localhost:8086
         shell: bash
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"raf-si-2021-1_Banka_InfluxScrapper" /o:"raf-si-2021-1" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
