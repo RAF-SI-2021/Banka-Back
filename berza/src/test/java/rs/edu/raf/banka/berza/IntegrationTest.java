@@ -51,9 +51,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {"berza.berze.csv=./berze.csv", "berza.inflacije.csv=./inflacije.csv"})
+@SpringBootTest(properties = {
+        "berza.berze.csv=./berze.csv",
+        "berza.inflacije.csv=./inflacije.csv",
+}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-@DisabledIfEnvironmentVariable(named = "WORKSPACE", matches = "CI")
 public class IntegrationTest {
 
     @Autowired
